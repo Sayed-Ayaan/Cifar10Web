@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f4">
+  <meta name="description" content="Explore computer vision. Upload an image to see what a CIFAR-10 model recognizes.">
+  <title>Fieldnote — See what AI sees</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Fieldnote home"><span class="brand-mark"><i></i><i></i><i></i><i></i></span><span>fieldnote<span class="brand-dot">.</span></span></a>
+      <div class="top-meta"><span class="live-dot"></span><span>COMPUTER VISION, MADE TANGIBLE</span></div>
+      <a class="github-link" href="https://www.cs.toronto.edu/~kriz/cifar.html" target="_blank" rel="noreferrer">Explore CIFAR-10 <span>↗</span></a>
+    </header>
+
+    <main>
+      <section class="intro">
+        <div class="hero-copy"><div class="eyebrow"><span class="eyebrow-line"></span> A little experiment in seeing</div>
+        <h1>Teach a machine<br>to <span class="serif">look closer.</span></h1>
+        <p class="intro-copy">Give our image model a photo. Watch it find familiar things, one curious guess at a time.</p>
+        <div class="hero-actions"><a href="#workspace" class="hero-cta">Try it out <span>↓</span></a><span class="hero-caption">10 THINGS IT KNOWS</span></div></div>
+        <div class="hero-art" aria-hidden="true"><div class="hero-orbit orbit-a"></div><div class="hero-orbit orbit-b"></div><div class="hero-orbit orbit-c"></div><div class="hero-center"><span class="center-sun">✳</span></div><span class="art-tag tag-one">CAT · 92%</span><span class="art-tag tag-two">SHIP · 06%</span><span class="art-coordinate">32° / 32°</span></div>
+      </section>
+
+      <section class="workspace" id="workspace" aria-label="Image classification">
+        <div class="upload-panel" id="dropZone">
+          <div class="panel-head"><span class="step">01</span><span class="panel-label">YOUR IMAGE</span><span class="panel-rule"></span><span class="format-label">JPG · PNG · WEBP</span></div>
+          <div class="drop-content" id="dropContent">
+            <div class="upload-icon"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 32V9m0 0-8 8m8-8 8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 28v9a3 3 0 0 0 3 3h22a3 3 0 0 0 3-3v-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+            <h2>Start with a picture</h2>
+            <p>Drop it here or choose how to add one</p>
+            <div class="input-actions"><button class="browse-button" id="browseButton" type="button"><span>↑</span> Choose a photo</button></div>
+            <span class="file-note">JPG, PNG OR WEBP · UP TO 12 MB</span>
+            <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+          </div>
+          <div class="preview-wrap" id="previewWrap" hidden>
+            <img id="preview" alt="Selected image preview">
+            <div class="preview-overlay"><span id="fileName"></span><button id="changeImage" type="button">Replace ↗</button></div>
+          </div>
+          <div class="panel-foot"><span class="foot-icon">↳</span><span>Best results with a clear, single subject</span><span class="foot-spacer"></span><span>32 × 32 INPUT</span></div>
+        </div>
+
+        <div class="connector"><span></span><svg viewBox="0 0 28 12" fill="none"><path d="M1 6h24m0 0-5-5m5 5-5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span></span></div>
+
+        <div class="result-panel" id="resultPanel">
+          <div class="panel-head"><span class="step">02</span><span class="panel-label">THE READ</span><span class="panel-rule"></span><span class="status-pill" id="statusPill"><i></i><span id="statusText">READY WHEN YOU ARE</span></span></div>
+          <div class="result-content" id="resultContent">
+            <div class="empty-graphic" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div><div class="orbit-core"><span>?</span></div><span class="spark spark-a">✳</span><span class="spark spark-b">✳</span><span class="spark spark-c">·</span></div>
+            <h2>A little curiosity goes a long way.</h2>
+            <p>Your top matches will show up here.</p>
+            <button class="analyze-button" id="analyzeButton" type="button" disabled><span>Analyze image</span><span class="button-arrow">↗</span></button>
+          </div>
+          <div class="results" id="results" hidden></div>
+          <div class="panel-foot"><span class="foot-icon">✳</span><span>Predictions are the model’s best guess</span><span class="foot-spacer"></span><span>TOP 3 MATCHES</span></div>
+        </div>
+      </section>
+
+      <div class="model-note"><span class="note-mark">i</span><p>Built on <strong>CIFAR-10</strong>: 60,000 tiny images across ten categories. It’s happiest with clear subjects, and always a little curious.</p><span class="model-status {% if model_ready %}ready{% else %}missing{% endif %}"><i></i>{% if model_ready %}MODEL ONLINE{% else %}WEIGHTS NEEDED{% endif %}</span></div>
+      {% if not model_ready %}<div class="setup-note">To turn on predictions, install the packages in <code>requirements.txt</code>, then run <code>python train.py</code> to create the model weights.</div>{% endif %}
+    </main>
+    <footer><span>FIELDNOTE <span class="footer-dot">●</span> BUILT FOR THE CURIOUS</span><span>THE WORLD, THROUGH A SMALLER LENS</span><span>© 2026</span></footer>
+  </div>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
